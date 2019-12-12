@@ -350,7 +350,7 @@ locals {
     ]
   )
   bootstrap_file              = "bootstrap-actions.json"
-  configurations_enabled      = var.enabled && (var.configurations_json != "" && var.configurations_json != null)
+  configurations_enabled      = ( var.enabled && (var.configurations_json != "" && var.configurations_json != null) )
   configurations_file         = "configurations.json"
   task_instance_group_enabled = var.enabled && var.create_task_instance_group
 }
