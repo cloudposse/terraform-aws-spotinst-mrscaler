@@ -356,7 +356,7 @@ locals {
 }
 
 resource "aws_s3_bucket_object" "bootstrap" {
-  count   = local.bootstrap_enabled ? 1 : 0
+//  count   = local.bootstrap_enabled ? 1 : 0
   bucket  = module.s3_bucket.bucket_id
   key     = local.bootstrap_file
   content = local.bootstrap_data
@@ -364,7 +364,7 @@ resource "aws_s3_bucket_object" "bootstrap" {
 }
 
 resource "aws_s3_bucket_object" "configurations" {
-  count   = local.configurations_enabled ? 1 : 0
+//  count   = local.configurations_enabled ? 1 : 0
   bucket  = module.s3_bucket.bucket_id
   key     = local.configurations_file
   content = var.configurations_json
