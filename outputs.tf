@@ -1,15 +1,16 @@
 output "cluster_id" {
-  value       = join("", aws_emr_cluster.default.*.id)
+  value       = join("", spotinst_mrscaler_aws.default.*.id)
   description = "EMR cluster ID"
 }
 
 output "cluster_name" {
-  value       = join("", aws_emr_cluster.default.*.name)
+  value       = join("", spotinst_mrscaler_aws.default.*.name)
   description = "EMR cluster name"
 }
 
 output "master_public_dns" {
-  value       = join("", aws_emr_cluster.default.*.master_public_dns)
+  //value       = join("", spotinst_mrscaler_aws.default.*.master_public_dns)
+  value = ""
   description = "Master public DNS"
 }
 
@@ -24,6 +25,7 @@ output "slave_security_group_id" {
 }
 
 output "master_host" {
-  value       = module.dns_master.hostname
+  //value       = module.dns_master.hostname
+  value = ""
   description = "Name of the cluster CNAME record for the master nodes in the parent DNS zone"
 }
