@@ -491,7 +491,13 @@ resource "spotinst_mrscaler_aws" "default" {
   // ----------------------------
 
   // --- TAGS -------------------
-  tags = module.label.tags
+  dynamic "tags" {
+    for_each = toset(module.label.tags)
+    content {
+      key   = tags.key
+      value = tags.value
+    }
+  }
   // ----------------------------
 }
 
