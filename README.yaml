@@ -35,7 +35,7 @@ github_repo: cloudposse/terraform-aws-spotinst-mrscaler
 badges:
   - name: "Codefresh Build Status"
     image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-spotinst-mrscaler?type=cf-1"
-    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d3b77ee6818e3f6dec32663"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5df2921e8dfc856612edc893"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-spotinst-mrscaler.svg"
     url: "https://github.com/cloudposse/terraform-aws-spotinst-mrscaler/releases/latest"
@@ -109,7 +109,7 @@ usage: |-
     generate_ssh_key    = var.generate_ssh_key
   }
 
-  module "emr_cluster" {
+  module "spotinst_mrscaler" {
     source                                         = "git::https://github.com/cloudposse/terraform-aws-spotinst-mrscaler.git?ref=master"
     namespace                                      = var.namespace
     stage                                          = var.stage
@@ -157,9 +157,9 @@ include:
 
 # Contributors to this project
 contributors:
+  - name: "Igor Rodionov"
+    github: "goruha"
   - name: "Erik Osterman"
     github: "osterman"
   - name: "Andriy Knysh"
     github: "aknysh"
-  - name: "Igor Rodionov"
-    github: "goruha"

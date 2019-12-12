@@ -1,5 +1,5 @@
 module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   namespace  = var.namespace
   name       = var.name
@@ -10,49 +10,49 @@ module "label" {
 }
 
 module "label_emr" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("emr")))
 }
 
 module "label_ec2" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("ec2")))
 }
 
 module "label_master" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("master")))
 }
 
 module "label_slave" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("slave")))
 }
 
 module "label_master_managed" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("master", "managed")))
 }
 
 module "label_slave_managed" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("slave", "managed")))
 }
 
 module "label_service_managed" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.14.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
   enabled    = var.enabled
   context    = module.label.context
   attributes = compact(concat(module.label.attributes, list("service", "managed")))
@@ -61,7 +61,7 @@ module "label_service_managed" {
 data "aws_region" "current" {}
 
 data "aws_subnet" "default" {
-  id = "${var.subnet_id}"
+  id = var.subnet_id
 }
 
 /*
@@ -311,7 +311,6 @@ resource "aws_iam_role_policy_attachment" "ec2" {
 }
 
 
-
 module "kms_key" {
   source              = "git::https://github.com/cloudposse/terraform-aws-kms-key.git?ref=tags/0.3.0"
   name                = var.name
@@ -350,13 +349,13 @@ locals {
     ]
   )
   bootstrap_file              = "bootstrap-actions.json"
-  configurations_enabled      = ( var.enabled && (var.configurations_json != "" && var.configurations_json != null) )
+  configurations_enabled      = (var.enabled && (var.configurations_json != "" && var.configurations_json != null))
   configurations_file         = "configurations.json"
   task_instance_group_enabled = var.enabled && var.create_task_instance_group
 }
 
 resource "aws_s3_bucket_object" "bootstrap" {
-//  count   = local.bootstrap_enabled ? 1 : 0
+  //  count   = local.bootstrap_enabled ? 1 : 0
   bucket  = module.s3_bucket.bucket_id
   key     = local.bootstrap_file
   content = local.bootstrap_data
@@ -364,7 +363,7 @@ resource "aws_s3_bucket_object" "bootstrap" {
 }
 
 resource "aws_s3_bucket_object" "configurations" {
-//  count   = local.configurations_enabled ? 1 : 0
+  //  count   = local.configurations_enabled ? 1 : 0
   bucket  = module.s3_bucket.bucket_id
   key     = local.configurations_file
   content = var.configurations_json
@@ -427,7 +426,7 @@ resource "spotinst_mrscaler_aws" "default" {
   dynamic "configurations_file" {
     for_each = toset(compact([local.configurations_enabled ? local.configurations_file : ""]))
     content {
-      bucket = join("", module.s3_bucket.*.id)
+      bucket = join("", module.s3_bucket.*.bucket_id)
       key    = configurations_file.value
     }
   }
@@ -435,7 +434,7 @@ resource "spotinst_mrscaler_aws" "default" {
   dynamic "bootstrap_actions_file" {
     for_each = toset(compact([local.bootstrap_enabled ? local.bootstrap_file : ""]))
     content {
-      bucket = join("", module.s3_bucket.*.id)
+      bucket = join("", module.s3_bucket.*.bucket_id)
       key    = bootstrap_actions_file.value
     }
   }
