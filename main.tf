@@ -425,7 +425,7 @@ resource "spotinst_mrscaler_aws" "default" {
   }
 
   dynamic "configurations_file" {
-    for_each = toset(compact[local.configurations_enabled ? local.configurations_file : ""])
+    for_each = toset(compact([local.configurations_enabled ? local.configurations_file : ""]))
     content {
       bucket = join("", module.s3_bucket.*.id)
       key    = configurations_file.value
@@ -433,7 +433,7 @@ resource "spotinst_mrscaler_aws" "default" {
   }
 
   dynamic "bootstrap_actions_file" {
-    for_each = toset(compact[local.bootstrap_enabled ? local.bootstrap_file : ""])
+    for_each = toset(compact([local.bootstrap_enabled ? local.bootstrap_file : ""]))
     content {
       bucket = join("", module.s3_bucket.*.id)
       key    = bootstrap_actions_file.value
