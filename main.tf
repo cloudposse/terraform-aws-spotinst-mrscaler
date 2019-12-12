@@ -494,8 +494,8 @@ resource "spotinst_mrscaler_aws" "default" {
   dynamic "tags" {
     for_each = toset(module.label.tags_as_list_of_maps)
     content {
-      key   = tags.key
-      value = tags.value
+      key   = tags.value.key
+      value = tags.value.value
     }
   }
   // ----------------------------
