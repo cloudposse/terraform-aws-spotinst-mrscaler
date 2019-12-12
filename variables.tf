@@ -132,6 +132,7 @@ variable "instance_weights" {
     instance_type     = string
     weighted_capacity = number
   }))
+  default = null
   description = "Describes the instance and weights. Check out [Elastigroup Weighted Instances](https://api.spotinst.com/elastigroup-for-aws/concepts/general-concepts/elastigroup-capacity-instances-or-weighted) for more info."
 }
 
