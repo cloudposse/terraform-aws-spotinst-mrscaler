@@ -1,3 +1,13 @@
+variable "spotinst_token" {
+  type        = string
+  description = "Spotinst token"
+}
+
+variable "spotinst_account" {
+  type        = string
+  description = "Spotinst account"
+}
+
 variable "region" {
   type        = string
   description = "AWS region"

@@ -347,13 +347,13 @@ locals {
     ]
   )
   bootstrap_file              = "bootstrap-actions.json"
-  configurations_enabled      = (var.enabled && (var.configurations_json != "" && var.configurations_json != null))
+  configurations_enabled      = var.enabled && (var.configurations_json != "" && var.configurations_json != null)
   configurations_file         = "configurations.json"
   task_instance_group_enabled = var.enabled && var.create_task_instance_group
 }
 
 resource "aws_s3_bucket_object" "bootstrap" {
-  //  count   = local.bootstrap_enabled ? 1 : 0
+  count   = local.bootstrap_enabled ? 1 : 0
   bucket  = module.s3_bucket.bucket_id
   key     = local.bootstrap_file
   content = local.bootstrap_data
@@ -361,11 +361,11 @@ resource "aws_s3_bucket_object" "bootstrap" {
 }
 
 resource "aws_s3_bucket_object" "configurations" {
-  //  count   = local.configurations_enabled ? 1 : 0
+  count   = local.configurations_enabled ? 1 : 0
   bucket  = module.s3_bucket.bucket_id
   key     = local.configurations_file
   content = var.configurations_json
-  etag    = md5(var.configurations_json)
+  etag    = local.configurations_enabled ? md5(var.configurations_json) : ""
 }
 
 resource "spotinst_mrscaler_aws" "default" {

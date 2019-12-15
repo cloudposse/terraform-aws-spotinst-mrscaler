@@ -2,6 +2,11 @@ provider "aws" {
   region = var.region
 }
 
+provider "spotinst" {
+  token   = var.spotinst_token
+  account = var.spotinst_account
+}
+
 module "vpc" {
   source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.1"
   namespace  = var.namespace
