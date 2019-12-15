@@ -8,6 +8,11 @@ variable "availability_zones" {
   description = "List of availability zones"
 }
 
+variable "vpc_cidr_block" {
+  type        = string
+  description = "VPC CIDR block"
+}
+
 variable "namespace" {
   type        = string
   description = "Namespace (e.g. `eg` or `cp`)"
@@ -23,14 +28,27 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)"
 }
 
+variable "delimiter" {
+  type        = string
+  default     = "-"
+  description = "Delimiter between `namespace`, `stage`, `name` and `attributes`"
+}
+
+variable "attributes" {
+  type        = list(string)
+  description = "Additional attributes (_e.g._ \"1\")"
+  default     = []
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Additional tags (_e.g._ { BusinessUnit : ABC })"
+  default     = {}
+}
+
 variable "ebs_root_volume_size" {
   type        = number
   description = "Size in GiB of the EBS root device volume of the Linux AMI that is used for each EC2 instance. Available in Amazon EMR version 4.x and later"
-}
-
-variable "visible_to_all_users" {
-  type        = bool
-  description = "Whether the job flow is visible to all IAM users of the AWS account associated with the job flow"
 }
 
 variable "release_label" {
@@ -49,16 +67,6 @@ variable "configurations_json" {
   default     = null
 }
 
-variable "core_instance_group_instance_type" {
-  type        = string
-  description = "EC2 instance type for all instances in the Core instance group"
-}
-
-variable "core_instance_group_instance_count" {
-  type        = number
-  description = "Target number of instances for the Core instance group. Must be at least 1"
-}
-
 variable "core_instance_group_ebs_size" {
   type        = number
   description = "Core instances volume size, in gibibytes (GiB)"
@@ -72,16 +80,6 @@ variable "core_instance_group_ebs_type" {
 variable "core_instance_group_ebs_volumes_per_instance" {
   type        = number
   description = "The number of EBS volumes with this configuration to attach to each EC2 instance in the Core instance group"
-}
-
-variable "master_instance_group_instance_type" {
-  type        = string
-  description = "EC2 instance type for all instances in the Master instance group"
-}
-
-variable "master_instance_group_instance_count" {
-  type        = number
-  description = "Target number of instances for the Master instance group. Must be at least 1"
 }
 
 variable "master_instance_group_ebs_size" {
@@ -112,4 +110,183 @@ variable "ssh_public_key_path" {
 variable "generate_ssh_key" {
   type        = bool
   description = "If set to `true`, new SSH key pair will be created"
+}
+
+variable "provisioning_timeout" {
+  type        = number
+  description = "The amount of time (minutes) after which the cluster perform provisioning_timeout_action if it's still in provisioning status."
+  default     = 15
+}
+
+variable "provisioning_timeout_action" {
+  type        = string
+  description = "The action to take if the timeout is exceeded. Valid values: `terminate`, `terminateAndRetry`"
+  default     = "terminate"
+}
+
+variable "repo_upgrade_on_boot" {
+  type        = string
+  description = "Specifies the type of updates that are applied from the Amazon Linux AMI package repositories when an instance boots using the AMI. Possible values include: `SECURITY`, `NONE`"
+  default     = "NONE"
+}
+
+variable "termination_protection" {
+  type        = bool
+  description = "Switch on/off termination protection (default is false, except when using multiple master nodes). Before attempting to destroy the resource when termination protection is enabled, this configuration must be applied with its value set to false"
+  default     = false
+}
+
+variable "keep_job_flow_alive_when_no_steps" {
+  type        = bool
+  description = "Switch on/off run cluster with no steps or when all steps are complete"
+  default     = true
+}
+
+variable "custom_ami_id" {
+  type        = string
+  description = "A custom Amazon Linux AMI for the cluster (instead of an EMR-owned AMI). Available in Amazon EMR version 5.7.0 and later"
+  default     = null
+}
+
+variable "instance_weights" {
+  type = list(object({
+    instance_type     = string
+    weighted_capacity = number
+  }))
+  default     = []
+  description = "Describes the instance and weights. Check out [Elastigroup Weighted Instances](https://api.spotinst.com/elastigroup-for-aws/concepts/general-concepts/elastigroup-capacity-instances-or-weighted) for more info."
+}
+
+variable "core_instance_group_instance_types" {
+  type        = list(string)
+  description = "EC2 instance type for all instances in the Core instance group"
+}
+
+variable "core_instance_group_instance_min_size" {
+  type        = number
+  description = "Min number of instances for the Core instance group. Must be at least 1"
+  default     = 1
+}
+
+variable "core_instance_group_instance_max_size" {
+  type        = number
+  description = "Max number of instances for the Core instance group. Must be greater or equal to `core_instance_group_instance_min_size`"
+  default     = 1
+}
+
+variable "core_instance_group_lifecycle" {
+  type        = string
+  default     = "SPOT"
+  description = "The MrScaler lifecycle for instances in core group. Allowed values are `SPOT` and `ON_DEMAND`"
+}
+
+variable "core_instance_group_ebs_iops" {
+  type        = number
+  description = "The number of I/O operations per second (IOPS) that the Core volume supports"
+  default     = null
+}
+
+variable "master_instance_group_instance_types" {
+  type        = list(string)
+  description = "EC2 instance types for all instances in the Master instance group"
+}
+
+variable "master_instance_group_lifecycle" {
+  type        = string
+  default     = "SPOT"
+  description = "The MrScaler lifecycle for instances in master group. Allowed values are `SPOT` and `ON_DEMAND`"
+}
+
+variable "master_instance_group_ebs_iops" {
+  type        = number
+  description = "The number of I/O operations per second (IOPS) that the Master volume supports"
+  default     = null
+}
+
+variable "additional_info" {
+  type        = string
+  description = "A JSON string for selecting additional features such as adding proxy information. Note: Currently there is no API to retrieve the value of this argument after EMR cluster creation from provider, therefore Terraform cannot detect drift from the actual EMR cluster if its value is changed outside Terraform"
+  default     = null
+}
+
+variable "security_configuration" {
+  type        = string
+  description = "The security configuration name to attach to the EMR cluster. Only valid for EMR clusters with `release_label` 4.8.0 or greater. See https://www.terraform.io/docs/providers/aws/r/emr_security_configuration.html for more info"
+  default     = null
+}
+
+variable "task_instance_group_instance_types" {
+  type        = list(string)
+  description = "EC2 instance types for all instances in the Task instance group"
+  default     = []
+}
+
+variable "task_instance_group_instance_min_size" {
+  type        = number
+  description = "Min number of instances for the Core instance group. Must be at least 1"
+  default     = 1
+}
+
+variable "task_instance_group_instance_max_size" {
+  type        = number
+  description = "Max number of instances for the Task instance group. Must be greater or equal to `task_instance_group_instance_min_size`"
+  default     = 1
+}
+
+variable "task_instance_group_instance_desired_size" {
+  type        = number
+  description = "Desired number of instances for the Task instance group. Must between of `task_instance_group_instance_min_size` and `task_instance_group_instance_max_size`"
+  default     = 1
+}
+
+variable "task_instance_group_lifecycle" {
+  type        = string
+  default     = "SPOT"
+  description = "The MrScaler lifecycle for instances in Task group. Allowed values are `SPOT` and `ON_DEMAND`"
+}
+
+variable "task_instance_group_ebs_size" {
+  type        = number
+  description = "Task instances volume size, in gibibytes (GiB)"
+  default     = 10
+}
+
+variable "task_instance_group_ebs_optimized" {
+  type        = bool
+  description = "Indicates whether an Amazon EBS volume in the Task instance group is EBS-optimized. Changing this forces a new resource to be created"
+  default     = false
+}
+
+variable "task_instance_group_ebs_type" {
+  type        = string
+  description = "Task instances volume type. Valid options are `gp2`, `io1`, `standard` and `st1`"
+  default     = "gp2"
+}
+
+variable "task_instance_group_ebs_iops" {
+  type        = number
+  description = "The number of I/O operations per second (IOPS) that the Task volume supports"
+  default     = null
+}
+
+variable "task_instance_group_ebs_volumes_per_instance" {
+  type        = number
+  description = "The number of EBS volumes with this configuration to attach to each EC2 instance in the Task instance group"
+  default     = 1
+}
+
+variable "bootstrap_action" {
+  type = list(object({
+    path = string
+    name = string
+    args = list(string)
+  }))
+  description = "List of bootstrap actions that will be run before Hadoop is started on the cluster nodes"
+  default     = []
+}
+
+variable "s3_bucket_force_destroy" {
+  type        = bool
+  default     = false
+  description = "A boolean string that indicates all objects should be deleted from the S3 bucket so that the bucket can be destroyed without error. These objects are not recoverable"
 }

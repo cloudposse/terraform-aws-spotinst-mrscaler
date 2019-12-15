@@ -43,15 +43,25 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	s3LogStorageBucketId := terraform.Output(t, terraformOptions, "s3_log_storage_bucket_id")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-emr-test-logs", s3LogStorageBucketId)
+	assert.Equal(t, "eg-test-spotinst-mrscaler-logs", s3LogStorageBucketId)
+
+	// Run `terraform output` to get the value of an output variable
+	configurationsBucketId := terraform.Output(t, terraformOptions, "configurations_bucket_id")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "eg-test-spotinst-mrscaler", configurationsBucketId)
 
 	// Run `terraform output` to get the value of an output variable
 	awsKeyPairKeyName := terraform.Output(t, terraformOptions, "aws_key_pair_key_name")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-emr-test-ssh-key", awsKeyPairKeyName)
+	assert.Equal(t, "eg-test-spotinst-mrscaler-ssh-key", awsKeyPairKeyName)
 
 	// Run `terraform output` to get the value of an output variable
 	clusterName := terraform.Output(t, terraformOptions, "cluster_name")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-emr-test", clusterName)
+	assert.Equal(t, "eg-test-spotinst-mrscaler", clusterName)
+
+	// Run `terraform output` to get the value of an output variable
+	clusterId := terraform.Output(t, terraformOptions, "cluster_id")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "eg-test-spotinst-mrscaler", clusterId)
 }

@@ -48,32 +48,42 @@ output "s3_log_storage_bucket_arn" {
   description = "Bucket ARN"
 }
 
+output "configurations_bucket_domain_name" {
+  value       = module.spotinst_mrscaler.bucket_domain_name
+  description = "FQDN of the S3 bucket"
+}
+
+output "configurations_bucket_id" {
+  value       = module.spotinst_mrscaler.bucket_id
+  description = "S3 bucket ID"
+}
+
+output "configurations_bucket_arn" {
+  value       = module.spotinst_mrscaler.bucket_arn
+  description = "S3 bucket ARN"
+}
+
 output "cluster_id" {
-  value       = module.emr_cluster.cluster_id
+  value       = module.spotinst_mrscaler.cluster_id
   description = "EMR cluster ID"
 }
 
 output "cluster_name" {
-  value       = module.emr_cluster.cluster_name
+  value       = module.spotinst_mrscaler.cluster_name
   description = "EMR cluster name"
 }
 
 output "cluster_master_public_dns" {
-  value       = module.emr_cluster.master_public_dns
+  value       = module.spotinst_mrscaler.master_public_dns
   description = "Master public DNS"
 }
 
 output "cluster_master_security_group_id" {
-  value       = module.emr_cluster.master_security_group_id
+  value       = module.spotinst_mrscaler.master_security_group_id
   description = "Master security group ID"
 }
 
 output "cluster_slave_security_group_id" {
-  value       = module.emr_cluster.slave_security_group_id
+  value       = module.spotinst_mrscaler.slave_security_group_id
   description = "Slave security group ID"
-}
-
-output "cluster_master_host" {
-  value       = module.emr_cluster.master_host
-  description = "Name of the cluster CNAME record for the master nodes in the parent DNS zone"
 }
