@@ -39,12 +39,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "zone_id" {
-  type        = string
-  description = "Route53 parent zone ID. If provided (not empty), the module will create sub-domain DNS records for the masters and slaves"
-  default     = null
-}
-
 variable "provisioning_timeout" {
   type        = number
   description = "The amount of time (minutes) after which the cluster perform provisioning_timeout_action if it's still in provisioning status."
@@ -92,12 +86,6 @@ variable "vpc_id" {
   description = "VPC ID to create the cluster in (e.g. `vpc-a22222ee`)"
 }
 
-variable "master_dns_name" {
-  type        = string
-  description = "Name of the cluster CNAME record to create in the parent DNS zone specified by `zone_id`. If left empty, the name will be auto-asigned using the format `emr-master-var.name`"
-  default     = null
-}
-
 variable "termination_protection" {
   type        = bool
   description = "Switch on/off termination protection (default is false, except when using multiple master nodes). Before attempting to destroy the resource when termination protection is enabled, this configuration must be applied with its value set to false"
@@ -132,7 +120,7 @@ variable "instance_weights" {
     instance_type     = string
     weighted_capacity = number
   }))
-  default = []
+  default     = []
   description = "Describes the instance and weights. Check out [Elastigroup Weighted Instances](https://api.spotinst.com/elastigroup-for-aws/concepts/general-concepts/elastigroup-capacity-instances-or-weighted) for more info."
 }
 
@@ -349,4 +337,10 @@ variable "bootstrap_action" {
   }))
   description = "List of bootstrap actions that will be run before Hadoop is started on the cluster nodes"
   default     = []
+}
+
+variable "s3_bucket_force_destroy" {
+  type        = bool
+  default     = false
+  description = "A boolean string that indicates all objects should be deleted from the S3 bucket so that the bucket can be destroyed without error. These objects are not recoverable"
 }

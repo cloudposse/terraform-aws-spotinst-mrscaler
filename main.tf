@@ -58,8 +58,6 @@ module "label_service_managed" {
   attributes = compact(concat(module.label.attributes, list("service", "managed")))
 }
 
-data "aws_region" "current" {}
-
 data "aws_subnet" "default" {
   id = var.subnet_id
 }
@@ -310,7 +308,6 @@ resource "aws_iam_role_policy_attachment" "ec2" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role"
 }
 
-
 module "kms_key" {
   source              = "git::https://github.com/cloudposse/terraform-aws-kms-key.git?ref=tags/0.3.0"
   name                = var.name
@@ -335,6 +332,7 @@ module "s3_bucket" {
   tags               = var.tags
   sse_algorithm      = "aws:kms"
   kms_master_key_arn = module.kms_key.alias_arn
+  force_destroy      = var.s3_bucket_force_destroy
 }
 
 locals {
@@ -373,7 +371,7 @@ resource "aws_s3_bucket_object" "configurations" {
 resource "spotinst_mrscaler_aws" "default" {
   count         = var.enabled ? 1 : 0
   name          = module.label.id
-  region        = data.aws_region.current.name
+  region        = var.region
   strategy      = "new"
   release_label = var.release_label
 
@@ -439,9 +437,6 @@ resource "spotinst_mrscaler_aws" "default" {
     }
   }
 
-
-  // -------------------------
-
   // --- MASTER GROUP -------------
   master_instance_types = var.master_instance_group_instance_types
   master_lifecycle      = var.master_instance_group_lifecycle
@@ -453,8 +448,6 @@ resource "spotinst_mrscaler_aws" "default" {
     iops                 = var.master_instance_group_ebs_iops
     size_in_gb           = var.master_instance_group_ebs_size
   }
-
-  // ------------------------------
 
   // --- CORE GROUP -------------
   core_instance_types   = var.core_instance_group_instance_types
@@ -469,7 +462,6 @@ resource "spotinst_mrscaler_aws" "default" {
     volume_type          = var.core_instance_group_ebs_type
     iops                 = var.core_instance_group_ebs_iops
     volumes_per_instance = var.core_instance_group_ebs_volumes_per_instance
-
   }
   // ----------------------------
 
@@ -487,7 +479,6 @@ resource "spotinst_mrscaler_aws" "default" {
     iops                 = var.task_instance_group_ebs_iops
     volumes_per_instance = var.task_instance_group_ebs_volumes_per_instance
   }
-  // ----------------------------
 
   // --- TAGS -------------------
   dynamic "tags" {
@@ -497,16 +488,7 @@ resource "spotinst_mrscaler_aws" "default" {
       value = tags.value.value
     }
   }
-  // ----------------------------
 }
-
-//module "dns_master" {
-//  source  = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.3.0"
-//  enabled = var.enabled && var.zone_id != null && var.zone_id != "" ? true : false
-//  name    = var.master_dns_name != null && var.master_dns_name != "" ? var.master_dns_name : "emr-master-${var.name}"
-//  zone_id = var.zone_id
-//  records = coalescelist(spotinst_mrscaler_aws.default.*.cluster_id .default.*.master_public_dns, [""])
-//}
 
 # https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html
 # https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-clusters-in-a-vpc.html
