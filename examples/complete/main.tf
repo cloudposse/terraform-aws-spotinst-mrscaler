@@ -95,7 +95,6 @@ module "spotinst_mrscaler" {
   log_uri                           = format("s3://%s", module.s3_log_storage.bucket_id)
   key_name                          = module.aws_key_pair.key_name
   s3_bucket_force_destroy           = true
-  ebs_root_volume_size              = var.ebs_root_volume_size
   provisioning_timeout              = var.provisioning_timeout
   provisioning_timeout_action       = var.provisioning_timeout_action
   repo_upgrade_on_boot              = var.repo_upgrade_on_boot

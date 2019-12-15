@@ -5,5 +5,6 @@ terraform {
     aws      = "~> 2.0"
     template = "~> 2.0"
     null     = "~> 2.0"
+    spotinst = "~> 1.13"
   }
 }

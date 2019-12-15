@@ -10,8 +10,6 @@ stage = "test"
 
 name = "spotinst-mrscaler"
 
-ebs_root_volume_size = 10
-
 release_label = "emr-5.25.0"
 
 applications = ["Hive", "Presto"]

@@ -46,11 +46,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "ebs_root_volume_size" {
-  type        = number
-  description = "Size in GiB of the EBS root device volume of the Linux AMI that is used for each EC2 instance. Available in Amazon EMR version 4.x and later"
-}
-
 variable "release_label" {
   type        = string
   description = "The release label for the Amazon EMR release. https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-release-5x.html"
