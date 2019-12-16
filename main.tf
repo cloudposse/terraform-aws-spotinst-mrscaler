@@ -498,7 +498,7 @@ data "aws_vpc_endpoint_service" "s3" {
 data "aws_vpc_endpoint" "s3" {
   count = var.enabled && var.subnet_type == "private" && length(data.aws_vpc_endpoint_service.s3.*.service_name) > 0 ? 1 : 0
   vpc_id       = var.vpc_id
-  service_name = data.aws_vpc_endpoint_service.s3.*.service_name
+  service_name = join("", data.aws_vpc_endpoint_service.s3.*.service_name)
 }
 
 
@@ -507,7 +507,7 @@ data "aws_vpc_endpoint" "s3" {
 resource "aws_vpc_endpoint" "vpc_endpoint_s3" {
   count           = var.enabled && var.subnet_type == "private" && length(data.aws_vpc_endpoint.s3.*.id) > 0 ? 1 : 0
   vpc_id          = var.vpc_id
-  service_name    = format("com.amazonaws.%s.s3", var.region)
+  service_name    = join("", data.aws_vpc_endpoint_service.s3.*.service_name)
   auto_accept     = true
   route_table_ids = [var.route_table_id]
   tags            = module.label.tags
