@@ -386,7 +386,7 @@ resource "spotinst_mrscaler_aws" "default" {
   expose_cluster_id = true
 
   availability_zones = [join("", formatlist("%s:%s", data.aws_subnet.default.*.availability_zone, data.aws_subnet.default.*.id))]
-
+  depends_on = ["aws_s3_bucket_object.configurations", "aws_s3_bucket_object.bootstrap"]
   provisioning_timeout {
     timeout        = var.provisioning_timeout
     timeout_action = var.provisioning_timeout_action
@@ -401,7 +401,7 @@ resource "spotinst_mrscaler_aws" "default" {
 
   termination_protected = var.termination_protection
   keep_job_flow_alive   = var.keep_job_flow_alive_when_no_steps
-  // -------------------------
+  // -------------------------Classification
 
   // --- OPTONAL COMPUTE -----
   custom_ami_id        = var.custom_ami_id
