@@ -308,6 +308,13 @@ resource "aws_iam_role_policy_attachment" "ec2" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role"
 }
 
+resource "aws_iam_instance_profile" "ec2" {
+  count = var.enabled ? 1 : 0
+  name  = join("", aws_iam_role.ec2.*.name)
+  role  = join("", aws_iam_role.ec2.*.name)
+}
+
+
 module "kms_key" {
   source              = "git::https://github.com/cloudposse/terraform-aws-kms-key.git?ref=tags/0.3.0"
   name                = var.name
@@ -388,7 +395,7 @@ resource "spotinst_mrscaler_aws" "default" {
   // --- CLUSTER ------------
   log_uri         = var.log_uri
   additional_info = var.additional_info
-  job_flow_role   = join("", aws_iam_role.ec2.*.name)
+  job_flow_role   = join("", aws_iam_instance_profile.ec2.*.arn)
   security_config = var.security_configuration
   service_role    = join("", aws_iam_role.emr.*.arn)
 
