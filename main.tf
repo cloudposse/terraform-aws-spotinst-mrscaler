@@ -371,6 +371,7 @@ resource "aws_s3_bucket_object" "configurations" {
 resource "spotinst_mrscaler_aws" "default" {
   count         = var.enabled ? 1 : 0
   name          = module.label.id
+  description   = module.label.id
   region        = var.region
   strategy      = "new"
   release_label = var.release_label
@@ -505,7 +506,7 @@ data "aws_vpc_endpoint" "s3" {
 # https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html
 # https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-clusters-in-a-vpc.html
 resource "aws_vpc_endpoint" "vpc_endpoint_s3" {
-  count           = var.enabled && var.subnet_type == "private" && length(data.aws_vpc_endpoint.s3.*.id) > 0 ? 1 : 0
+  count           = var.enabled && var.subnet_type == "private" && length(data.aws_vpc_endpoint.s3.*.id) == 0 ? 1 : 0
   vpc_id          = var.vpc_id
   service_name    = join("", data.aws_vpc_endpoint_service.s3.*.service_name)
   auto_accept     = true
