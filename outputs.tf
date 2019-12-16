@@ -10,7 +10,13 @@ output "cluster_name" {
 
 output "master_public_dns" {
   //value       = join("", spotinst_mrscaler_aws.default.*.master_public_dns)
-  value       = ""
+  value       = "1"
+  description = "Master public DNS"
+}
+
+output "master_host" {
+  //value       = join("", spotinst_mrscaler_aws.default.*.master_public_dns)
+  value       = "1"
   description = "Master public DNS"
 }
 
