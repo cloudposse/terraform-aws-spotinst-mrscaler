@@ -395,7 +395,7 @@ resource "spotinst_mrscaler_aws" "default" {
   // --- CLUSTER ------------
   log_uri         = var.log_uri
   additional_info = var.additional_info
-  job_flow_role   = join("", aws_iam_instance_profile.ec2.*.arn)
+  job_flow_role   = join("", aws_iam_instance_profile.ec2.*.name)
   security_config = var.security_configuration
   service_role    = join("", aws_iam_role.emr.*.arn)
 
