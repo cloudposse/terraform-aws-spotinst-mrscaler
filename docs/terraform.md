@@ -14,7 +14,7 @@
 | core_instance_group_instance_desired_size | Desired number of instances for the Core instance group. Must between of `core_instance_group_instance_min_size` and `core_instance_group_instance_max_size` | number | `1` | no |
 | core_instance_group_instance_max_size | Max number of instances for the Core instance group. Must be greater or equal to `core_instance_group_instance_min_size` | number | `1` | no |
 | core_instance_group_instance_min_size | Min number of instances for the Core instance group. Must be at least 1 | number | `1` | no |
-| core_instance_group_instance_types | EC2 instance type for all instances in the Core instance group | list(string) | - | yes |
+| core_instance_group_instance_types | EC2 instance type for all instances in the Core instance group | list(string) | `<list>` | no |
 | core_instance_group_lifecycle | The MrScaler lifecycle for instances in core group. Allowed values are `SPOT` and `ON_DEMAND` | string | `SPOT` | no |
 | create_task_instance_group | Whether to create an instance group for Task nodes. For more info: https://www.terraform.io/docs/providers/aws/r/emr_instance_group.html, https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html | bool | `false` | no |
 | custom_ami_id | A custom Amazon Linux AMI for the cluster (instead of an EMR-owned AMI). Available in Amazon EMR version 5.7.0 and later | string | `null` | no |
@@ -30,7 +30,7 @@
 | master_instance_group_ebs_size | Master instances volume size, in gibibytes (GiB) | number | - | yes |
 | master_instance_group_ebs_type | Master instances volume type. Valid options are `gp2`, `io1`, `standard` and `st1` | string | `gp2` | no |
 | master_instance_group_ebs_volumes_per_instance | The number of EBS volumes with this configuration to attach to each EC2 instance in the Master instance group | number | `1` | no |
-| master_instance_group_instance_types | EC2 instance types for all instances in the Master instance group | list(string) | - | yes |
+| master_instance_group_instance_types | EC2 instance types for all instances in the Master instance group | list(string) | `<list>` | no |
 | master_instance_group_lifecycle | The MrScaler lifecycle for instances in master group. Allowed values are `SPOT` and `ON_DEMAND` | string | `SPOT` | no |
 | name | Name of the application | string | - | yes |
 | namespace | Namespace (e.g. `eg` or `cp`) | string | `` | no |
@@ -70,6 +70,7 @@
 | bucket_id | S3 bucket ID |
 | cluster_id | EMR cluster ID |
 | cluster_name | EMR cluster name |
+| master_host | Master public DNS |
 | master_public_dns | Master public DNS |
 | master_security_group_id | Master security group ID |
 | slave_security_group_id | Slave security group ID |
