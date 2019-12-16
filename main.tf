@@ -513,9 +513,3 @@ resource "aws_vpc_endpoint" "vpc_endpoint_s3" {
   route_table_ids = [var.route_table_id]
   tags            = module.label.tags
 }
-
-#data "aws_vpc_endpoint" "s3" {
-#  count = var.enabled && var.subnet_type == "private" && length(data.aws_vpc_endpoint_service.s3.*.service_name) > 0 ? 1 : 0
-#  vpc_id       = var.vpc_id
-#  service_name = join("", data.aws_vpc_endpoint_service.s3.*.service_name)
-#}
