@@ -429,21 +429,21 @@ resource "spotinst_mrscaler_aws" "default" {
     }
   }
 
-  dynamic "configurations_file" {
-    for_each = local.configurations_enabled ? [local.configurations_file] : []
-    content {
-      bucket = join("", module.s3_bucket.*.bucket_id)
-      key    = configurations_file.value
-    }
-  }
-
-  dynamic "bootstrap_actions_file" {
-    for_each = local.bootstrap_enabled ? [local.bootstrap_file] : []
-    content {
-      bucket = join("", module.s3_bucket.*.bucket_id)
-      key    = bootstrap_actions_file.value
-    }
-  }
+//  dynamic "configurations_file" {
+//    for_each = local.configurations_enabled ? [local.configurations_file] : []
+//    content {
+//      bucket = join("", module.s3_bucket.*.bucket_id)
+//      key    = configurations_file.value
+//    }
+//  }
+//
+//  dynamic "bootstrap_actions_file" {
+//    for_each = local.bootstrap_enabled ? [local.bootstrap_file] : []
+//    content {
+//      bucket = join("", module.s3_bucket.*.bucket_id)
+//      key    = bootstrap_actions_file.value
+//    }
+//  }
 
   // --- MASTER GROUP -------------
   master_instance_types = var.master_instance_group_instance_types
