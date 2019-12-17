@@ -404,8 +404,8 @@ resource "spotinst_mrscaler_aws" "default" {
   // -------------------------Classification
 
   // --- OPTONAL COMPUTE -----
-  custom_ami_id        = var.custom_ami_id
-  repo_upgrade_on_boot = var.repo_upgrade_on_boot
+//  custom_ami_id        = var.custom_ami_id
+//  repo_upgrade_on_boot = var.repo_upgrade_on_boot
   ec2_key_name         = var.key_name
 
   managed_primary_security_group     = join("", aws_security_group.managed_master.*.id)
